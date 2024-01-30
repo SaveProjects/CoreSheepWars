@@ -1,0 +1,7 @@
+name: Core_SheepWars
+version: 0.1
+author: EdmineCoreTeam
+main: fr.edminecoreteam.sheepwars.Core
+commands:
+  game:
+    description: Game Manager

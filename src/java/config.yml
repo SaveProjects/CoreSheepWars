@@ -1,0 +1,63 @@
+#
+# Fichier configuration de jeux par Edmine Network.
+# Dev: N12cf
+# Version: 0.1
+#
+
+# MySQL.
+mysql:
+  host: 'ip'
+  database: 'database'
+  user: 'user'
+  password: 'pass'
+
+# Type de match (ranked, unranked).
+type: 'ranked'
+
+# Nombre de joueurs demandés pour lancer.
+needtostart: 10
+
+# Gestion des équipes.
+teams:
+  red:
+    players: 10
+  blue:
+    players: 10
+
+# Définir les timers du jeu.
+timers:
+  start: 60
+  startfull: 10
+  preparation: 15
+  game: 900
+
+# Spawn du lobby principal.
+spawn:
+  world: 'hub'
+  x: 2.5
+  y: 31.0
+  z: 0.5
+  f: -90.5
+  t: -4.0
+
+# Gestion des cartes.
+maps:
+  City:
+    spec:
+      x: -0.5
+      y: 100.0
+      z: -52.5
+      f: -0.5
+      t: 30.0
+    red:
+      x: -56.5
+      y: 70.0
+      z: -21.5
+      f: -90.5
+      t: -3
+    blue:
+      x: 53.5
+      y: 71.0
+      z: -2.5
+      f: -180.0
+      t: -0
