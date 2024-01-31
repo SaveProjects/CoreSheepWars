@@ -11,11 +11,7 @@ public enum SheepsList
     FRAGMENTATION("FRAGMENTATION", 6),
     DISTORSION("DISTORSION", 7),
     TREMBLEMENT("TREMBLEMENT", 8),
-    EXPLOSIF("EXPLOSIF", 9),
-    TENEBREUX("TENEBREUX", 10),
-    TSUNAMI("TSUNAMI", 11),
-    SINGULARITE("SINGULARITE", 12),
-    BONZAI("BONZAI", 13);
+    EXPLOSIF("EXPLOSIF", 9);
 
     private SheepsList(final String name, final int ordinal) { }
 }

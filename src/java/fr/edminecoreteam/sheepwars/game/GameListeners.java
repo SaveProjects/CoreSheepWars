@@ -4,18 +4,24 @@ import fr.edminecoreteam.sheepwars.Core;
 import fr.edminecoreteam.sheepwars.State;
 import fr.edminecoreteam.sheepwars.game.kits.DefaultKit;
 import fr.edminecoreteam.sheepwars.game.spec.Spectate;
+import fr.edminecoreteam.sheepwars.waiting.guis.ChooseTeam;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class GameListeners implements Listener
 {
@@ -42,11 +48,26 @@ public class GameListeners implements Listener
     }
 
     @EventHandler
-    public void onMove(PlayerInteractEvent e)
+    public void onInteract(PlayerInteractEvent e)
     {
         if (core.isState(State.PREPARATION))
         {
             e.setCancelled(true);
+        }
+        if (core.isState(State.INGAME))
+        {
+            if (e.getItem() == null) { return; }
+
+            Player p = e.getPlayer();
+            ItemStack it = e.getItem();
+            if (it.getType() == Material.IRON_SWORD || it.getType() == Material.BOW || it.getType() == Material.ARROW)
+            {
+                if (core.isState(State.INGAME))
+                {
+                    DefaultKit defaultKit = new DefaultKit(p);
+                    defaultKit.armed();
+                }
+            }
         }
     }
 
@@ -62,7 +83,36 @@ public class GameListeners implements Listener
                     Player p = (Player) e.getEntity();
                     p.setHealth(0.0D);
                 }
+                if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL))
+                {
+                    e.setCancelled(true);
+                }
             }
+        }
+    }
+
+    @EventHandler
+    private void onDrop(PlayerDropItemEvent e)
+    {
+        if (core.isState(State.INGAME) || core.isState(State.PREPARATION))
+        {
+            if (e.getItemDrop().getItemStack().getType().equals(Material.ARROW) || e.getItemDrop().getItemStack().getType().equals(Material.BOW) || e.getItemDrop().getItemStack().getType().equals(Material.WOOD_SWORD))
+            {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    private void onHungerBarChange(FoodLevelChangeEvent e)
+    {
+        if (e.getEntityType() != EntityType.PLAYER)
+        {
+            return;
+        }
+        if (core.isState(State.INGAME) || core.isState(State.PREPARATION))
+        {
+            e.setCancelled(true);
         }
     }
 
@@ -107,6 +157,7 @@ public class GameListeners implements Listener
         if (e.getEntityType() == EntityType.PLAYER)
         {
             Player victim = (Player) e.getEntity();
+            e.getDrops().clear();
             if (victim.getKiller() != null)
             {
                 if (victim.getKiller().getType() == EntityType.PLAYER)

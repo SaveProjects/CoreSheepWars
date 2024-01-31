@@ -1,6 +1,8 @@
 package fr.edminecoreteam.sheepwars;
 
 import fr.edminecoreteam.sheepwars.game.GameListeners;
+import fr.edminecoreteam.sheepwars.game.sheeps.SheepsListeners;
+import fr.edminecoreteam.sheepwars.game.sheeps.sheeps.*;
 import fr.edminecoreteam.sheepwars.game.teams.Teams;
 import fr.edminecoreteam.sheepwars.game.teams.displayname.ChatTeam;
 import fr.edminecoreteam.sheepwars.game.teams.displayname.TabListTeams;
@@ -52,6 +54,7 @@ public class Core extends JavaPlugin
         saveDefaultConfig();
         loadGameWorld();
         loadListeners();
+        loadSheeps();
         ScoreboardManager();
 
         //MySQLConnect();
@@ -88,6 +91,22 @@ public class Core extends JavaPlugin
 
         Bukkit.getPluginManager().registerEvents((Listener) new TabListTeams(), (Plugin)this);
         Bukkit.getPluginManager().registerEvents((Listener) new ChatTeam(), (Plugin)this);
+    }
+
+    private void loadSheeps()
+    {
+        Bukkit.getPluginManager().registerEvents((Listener) new SheepsListeners(), (Plugin)this);
+
+        Bukkit.getPluginManager().registerEvents((Listener) new ABORDAGE(), (Plugin)this); // 1
+        Bukkit.getPluginManager().registerEvents((Listener) new INCENDIAIRE(), (Plugin)this); // 2
+        Bukkit.getPluginManager().registerEvents((Listener) new GLACE(), (Plugin)this); // 3
+        Bukkit.getPluginManager().registerEvents((Listener) new FOUDRE(), (Plugin)this); // 4
+        Bukkit.getPluginManager().registerEvents((Listener) new CHERCHEUR(), (Plugin)this); // 5
+        Bukkit.getPluginManager().registerEvents((Listener) new SOIGNEUR(), (Plugin)this); // 6
+        Bukkit.getPluginManager().registerEvents((Listener) new FRAGMENTATION(), (Plugin)this); // 7
+        Bukkit.getPluginManager().registerEvents((Listener) new DISTORSION(), (Plugin)this); // 8
+        Bukkit.getPluginManager().registerEvents((Listener) new TREMBLEMENT(), (Plugin)this); // 9
+        Bukkit.getPluginManager().registerEvents((Listener) new EXPLOSIF(), (Plugin)this); // 10
     }
 
     private void loadGameWorld()

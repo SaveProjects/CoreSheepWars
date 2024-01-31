@@ -51,13 +51,13 @@ public class Teams
                 if (red.contains(p)) { red.remove(p); }
 
                 blue.add(p);
-                p.sendMessage("§f§lSheepWars §8» §7Vous avez rejoint l'équipe §9Bleue§7.");
+                p.sendMessage("§f§lSheepWars §8» §7Vous avez rejoint l'équipe §9Bleu§7.");
                 return;
             }
         }
         else
         {
-            System.out.println("CS PaintBall error, use red or blue.");
+            System.out.println("SheepWars error, use red or blue.");
             return;
         }
     }
@@ -70,13 +70,13 @@ public class Teams
         if (red.size() < core.getConfig().getInt("teams.red.players"))
         {
             red.add(p);
-            p.sendMessage("§f§lPaintBall §8» §7Vous avez rejoint l'équipe §cRouge§7.");
+            p.sendMessage("§f§lSheepWars §8» §7Vous avez rejoint l'équipe §cRouge§7.");
             return;
         }
         if (blue.size() < core.getConfig().getInt("teams.blue.players"))
         {
             blue.add(p);
-            p.sendMessage("§f§lPaintBall §8» §7Vous avez rejoint l'équipe §9Bleue§7.");
+            p.sendMessage("§f§lSheepWars §8» §7Vous avez rejoint l'équipe §9Bleu§7.");
             return;
         }
     }

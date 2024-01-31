@@ -3,6 +3,7 @@ package fr.edminecoreteam.sheepwars.game;
 import fr.edminecoreteam.sheepwars.Core;
 import fr.edminecoreteam.sheepwars.end.EndListeners;
 import fr.edminecoreteam.sheepwars.game.kits.DefaultKit;
+import fr.edminecoreteam.sheepwars.game.sheeps.tasks.GiveSheep;
 import fr.edminecoreteam.sheepwars.game.tasks.Preparation;
 import fr.edminecoreteam.sheepwars.game.tasks.Start;
 import fr.edminecoreteam.sheepwars.utils.game.GameUtils;
@@ -52,6 +53,9 @@ public class Game
         }
         Start task = new Start(core);
         task.runTaskTimer((Plugin) core, 0L, 20L);
+
+        GiveSheep giveSheep = new GiveSheep(core);
+        giveSheep.runTaskTimer((Plugin) core, 0L, 20L);
     }
 
     public void endGame()
