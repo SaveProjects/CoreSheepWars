@@ -45,6 +45,14 @@ public class SheepsListeners implements Listener
             {
                 e.setCancelled(true);
             }
+            if (e.getCause() == EntityDamageEvent.DamageCause.THORNS)
+            {
+                e.setCancelled(true);
+            }
+            if (e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK)
+            {
+                e.setCancelled(true);
+            }
         }
     }
 }

@@ -67,6 +67,26 @@ public class Sheeps
             EXPLOSIF s = new EXPLOSIF();
             s.get(p);
         }
+        if (sheeps == SheepsList.TENEBREUX)
+        {
+            TENEBREUX s = new TENEBREUX();
+            s.get(p);
+        }
+        if (sheeps == SheepsList.TSUNAMI)
+        {
+            TSUNAMI s = new TSUNAMI();
+            s.get(p);
+        }
+        if (sheeps == SheepsList.SINGULARITE)
+        {
+            SINGULARITE s = new SINGULARITE();
+            s.get(p);
+        }
+        if (sheeps == SheepsList.BONZAI)
+        {
+            BONZAI s = new BONZAI();
+            s.get(p);
+        }
     }
 
     private <T extends Enum<?>> T getRandomEnum(Class<T> clazz) {

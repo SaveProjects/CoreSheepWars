@@ -8,16 +8,11 @@ import fr.edminecoreteam.sheepwars.waiting.guis.ChooseTeam;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -60,13 +55,31 @@ public class GameListeners implements Listener
 
             Player p = e.getPlayer();
             ItemStack it = e.getItem();
-            if (it.getType() == Material.IRON_SWORD || it.getType() == Material.BOW || it.getType() == Material.ARROW)
+            if (it.getType() == Material.IRON_SWORD || it.getType() == Material.ARROW)
             {
                 if (core.isState(State.INGAME))
                 {
                     DefaultKit defaultKit = new DefaultKit(p);
                     defaultKit.armed();
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBowShoot(EntityShootBowEvent e)
+    {
+        if (core.isState(State.PREPARATION))
+        {
+            e.setCancelled(true);
+        }
+        if (core.isState(State.INGAME))
+        {
+            if (core.isState(State.INGAME))
+            {
+                Player p = (Player) e.getEntity();
+                DefaultKit defaultKit = new DefaultKit(p);
+                defaultKit.armed();
             }
         }
     }
@@ -81,6 +94,13 @@ public class GameListeners implements Listener
                 if (e.getCause().equals(EntityDamageEvent.DamageCause.VOID))
                 {
                     Player p = (Player) e.getEntity();
+                    for (Entity entity : p.getNearbyEntities(5, 5, 5))
+                    {
+                        if (entity instanceof Sheep)
+                        {
+                            entity.remove();
+                        }
+                    }
                     p.setHealth(0.0D);
                 }
                 if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL))

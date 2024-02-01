@@ -107,6 +107,10 @@ public class Core extends JavaPlugin
         Bukkit.getPluginManager().registerEvents((Listener) new DISTORSION(), (Plugin)this); // 8
         Bukkit.getPluginManager().registerEvents((Listener) new TREMBLEMENT(), (Plugin)this); // 9
         Bukkit.getPluginManager().registerEvents((Listener) new EXPLOSIF(), (Plugin)this); // 10
+        Bukkit.getPluginManager().registerEvents((Listener) new TENEBREUX(), (Plugin)this); // 11
+        Bukkit.getPluginManager().registerEvents((Listener) new TSUNAMI(), (Plugin)this); // 12
+        Bukkit.getPluginManager().registerEvents((Listener) new SINGULARITE(), (Plugin)this); // 13
+        Bukkit.getPluginManager().registerEvents((Listener) new BONZAI(), (Plugin)this); // 14
     }
 
     private void loadGameWorld()

@@ -7,7 +7,6 @@ import fr.edminecoreteam.sheepwars.utils.minecraft.SkullNBT;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.WeatherType;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
@@ -26,15 +25,15 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FOUDRE implements Listener
+public class TSUNAMI implements Listener
 {
     private final GameUtils gameUtils = new GameUtils();
     private ItemStack getSkull(String url) { return SkullNBT.getSkull(url); }
     private final static Core core = Core.getInstance();
-    private final String url = "http://textures.minecraft.net/texture/12a5354c230e861aac72734a4582d1317026454b807ac353fc3a0bd0d8c422ba";
+    private final String url = "http://textures.minecraft.net/texture/60558387b6658f5e9dcffc719214b603f603c4b04e708b7aabe75bcae91e804c";
     private final ItemStack block = getSkull(url);
-    private final DyeColor sheepColor = DyeColor.YELLOW;
-    private final String name = "§6Mouton De Foudre";
+    private final DyeColor sheepColor = DyeColor.CYAN;
+    private final String name = "§bMouton Tsunami";
 
     public void get(Player player)
     {
@@ -97,41 +96,24 @@ public class FOUDRE implements Listener
 
                 if (sheep == null || sheep.isDead())
                 {
-                    for (Player pls : core.getServer().getOnlinePlayers())
-                    {
-                        pls.resetPlayerWeather();
-                        pls.resetPlayerTime();
-                    }
                     cancel();
                 }
-
-                if (sheep != null && sheep.isOnGround())
+                Location loc = sheep.getLocation();
+                for (Player pls : core.getServer().getOnlinePlayers())
                 {
-                    gameUtils.summonLightningStorm(sheep.getLocation());
-                    Location loc = sheep.getLocation();
-                    for (Player pls : core.getServer().getOnlinePlayers())
+                    double distanceSquared = pls.getLocation().distanceSquared(loc);
+                    if (distanceSquared <= 7 * 7)
                     {
-                        double distanceSquared = pls.getLocation().distanceSquared(loc);
-                        if (distanceSquared <= 10 * 10)
+                        if (sheep.isOnGround())
                         {
-                            if (sheep.isOnGround())
-                            {
-                                pls.setPlayerTime(18000, false);
-                                pls.setPlayerWeather(WeatherType.DOWNFALL);
-                                sheep.setVelocity(pls.getLocation().toVector().subtract(sheep.getLocation().toVector()).normalize().multiply(1));
-                                playerList.add(pls);
-                            }
+                            gameUtils.tsunami(sheep);
+                            sheep.setVelocity(pls.getLocation().toVector().subtract(sheep.getLocation().toVector()).normalize().multiply(1));
                         }
                     }
                 }
 
                 if (f == 20)
                 {
-                    for (Player pls : core.getServer().getOnlinePlayers())
-                    {
-                        pls.resetPlayerWeather();
-                        pls.resetPlayerTime();
-                    }
                     sheep.remove();
                     cancel();
                 }
@@ -140,6 +122,6 @@ public class FOUDRE implements Listener
                     run();
                 }
             }
-        }.runTaskTimer((Plugin) core, 0L, 10L);
+        }.runTaskTimer((Plugin) core, 5L, 10L);
     }
 }

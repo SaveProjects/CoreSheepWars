@@ -12,6 +12,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -145,7 +148,7 @@ public class GameUtils
 
     public void summonLightningStorm(Location center) {
         World world = center.getWorld();
-        int radius = 10; // Rayon du cercle
+        int radius = 8; // Rayon du cercle
         int offsetX = -radius + (int) (Math.random() * (2 * radius + 1)); // Décalage X aléatoire dans le rayon
         int offsetZ = -radius + (int) (Math.random() * (2 * radius + 1)); // Décalage Z aléatoire dans le rayon
 
@@ -279,16 +282,16 @@ public class GameUtils
 
     public static void tremblement(Sheep sheep) {
         Location sheepLocation = sheep.getLocation();
-        List<Entity> nearbyEntities = sheep.getNearbyEntities(15, 15, 15);
+        List<Entity> nearbyEntities = sheep.getNearbyEntities(10, 10, 10);
         Random random = new Random();
 
         for (Entity entity : nearbyEntities) {
             if (entity instanceof Player) {
                 Player player = (Player) entity;
                 // Calculer la vélocité aléatoire
-                double offsetX = -1 + (random.nextDouble() * 2); // Valeur aléatoire entre -1 et 1
-                double offsetY = 0.5 + (random.nextDouble() * 0.5); // Valeur aléatoire entre 0.5 et 1 pour un petit saut
-                double offsetZ = -1 + (random.nextDouble() * 2); // Valeur aléatoire entre -1 et 1
+                double offsetX = -1 + (random.nextDouble() * 0.1); // Valeur aléatoire entre -1 et 1
+                double offsetY = 0.5 + (random.nextDouble() * 0.1); // Valeur aléatoire entre 0.5 et 1 pour un petit saut
+                double offsetZ = -1 + (random.nextDouble() * 0.1); // Valeur aléatoire entre -1 et 1
                 Location playerLocation = player.getLocation();
                 double playerX = playerLocation.getX();
                 double playerY = playerLocation.getY();
@@ -312,5 +315,134 @@ public class GameUtils
         World world = sheepLocation.getWorld();
         world.createExplosion(sheepLocation, 4.0f, true);
         sheep.remove();
+    }
+
+    public void tsunami(Sheep sheep) {
+        Location sheepLocation = sheep.getLocation();
+        List<Entity> nearbyEntities = sheep.getNearbyEntities(7, 7, 7);
+
+        // Créer l'animation de la vague d'eau
+        new BukkitRunnable() {
+            int radius = 7;
+            double waveHeight = 1.5;
+
+            @Override
+            public void run() {
+                for (double theta = 0; theta <= 2 * Math.PI; theta += Math.PI / 32) {
+                    double x = sheepLocation.getX() + radius * Math.cos(theta);
+                    double z = sheepLocation.getZ() + radius * Math.sin(theta);
+                    Location waterLocation = new Location(sheepLocation.getWorld(), x, sheepLocation.getY(), z);
+                    for (int i = 0; i < waveHeight; i++) {
+                        Block waterBlock = waterLocation.add(0, i, 0).getBlock();
+                        waterBlock.setType(Material.WATER);
+                        waterBlock.getRelative(0, -1, 0).setType(Material.AIR); // Supprimer le bloc en dessous de l'eau
+                        if (waterBlock.getRelative(0, -1, 0).getType() != Material.BEDROCK) {
+                            waterBlock.getRelative(0, -1, 0).breakNaturally(); // Casser le bloc en dessous de l'eau
+                        }
+                    }
+                }
+                if (waveHeight > 0) {
+                    waveHeight -= 0.1;
+                    // Appliquer l'effet de poison aux joueurs touchés
+                    for (Entity entity : nearbyEntities) {
+                        if (entity instanceof Player) {
+                            Player player = (Player) entity;
+                            Location playerLocation = player.getLocation();
+                            if (sheepLocation.distance(playerLocation) <= 7) {
+                                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 1));
+                            }
+                        }
+                    }
+                } else {
+                    // Restaurer les blocs d'air après le passage de la vague
+                    for (double theta = 0; theta <= 2 * Math.PI; theta += Math.PI / 32) {
+                        double x = sheepLocation.getX() + radius * Math.cos(theta);
+                        double z = sheepLocation.getZ() + radius * Math.sin(theta);
+                        Location waterLocation = new Location(sheepLocation.getWorld(), x, sheepLocation.getY(), z);
+                        for (int i = 0; i < waveHeight; i++) {
+                            Block waterBlock = waterLocation.add(0, i, 0).getBlock();
+                            if (waterBlock.getType() == Material.WATER) {
+                                waterBlock.setType(Material.AIR);
+                            }
+                        }
+                    }
+                    cancel();
+                }
+            }
+        }.runTaskTimer(core, 0, 5); // Exécuter toutes les 5 ticks
+    }
+
+
+    public void singularite(Sheep sheep) {
+        Location sheepLocation = sheep.getLocation();
+        List<Entity> nearbyEntities = sheep.getNearbyEntities(10, 10, 10);
+
+        // Déplacer le mouton vers le vide
+        sheep.setVelocity(new org.bukkit.util.Vector(0, -1, 0));
+
+        // Attraction des joueurs autour du mouton
+        for (Entity entity : nearbyEntities) {
+            if (entity instanceof Player) {
+                Player player = (Player) entity;
+                Location playerLocation = player.getLocation();
+                double distanceToSheep = sheepLocation.distance(playerLocation);
+
+                // Calculer les vecteurs de direction entre le joueur et le mouton
+                double dX = sheepLocation.getX() - playerLocation.getX();
+                double dY = sheepLocation.getY() - playerLocation.getY();
+                double dZ = sheepLocation.getZ() - playerLocation.getZ();
+
+                // Normaliser le vecteur de direction
+                double length = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
+                double directionX = dX / length;
+                double directionY = dY / length;
+                double directionZ = dZ / length;
+
+                // Appliquer une force d'attraction aux joueurs autour du mouton
+                double forceMagnitude = Math.max(0, (10 - distanceToSheep) / 10); // Plus proche = plus forte attraction
+                double attractionX = directionX * forceMagnitude;
+                double attractionY = directionY * forceMagnitude;
+                double attractionZ = directionZ * forceMagnitude;
+
+                player.setVelocity(new org.bukkit.util.Vector(attractionX, attractionY, attractionZ));
+            }
+        }
+    }
+
+    public void bonzai(Sheep sheep, Core plugin) {
+        BukkitRunnable task = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (sheep == null || sheep.isDead()) {
+                    cancel(); // Annuler la tâche si le mouton est null ou mort
+                    return;
+                }
+
+                Location sheepLocation = sheep.getLocation();
+                List<Entity> nearbyEntities = sheep.getNearbyEntities(5, 5, 5);
+
+                // Trouver un bloc d'air derrière le mouton
+                Location airLocation = sheepLocation.clone().subtract(sheepLocation.getDirection().multiply(2));
+                Block blockBehindSheep = airLocation.getBlock();
+
+                // Si le bloc derrière le mouton est de l'air, placer un bloc de feuille
+                if (blockBehindSheep.getType() == Material.AIR) {
+                    blockBehindSheep.setType(Material.LEAVES);
+                }
+
+                // Supprimer les blocs de feuilles autour du mouton
+                for (Entity entity : nearbyEntities) {
+                    if (entity instanceof Player) {
+                        Player player = (Player) entity;
+                        Location playerLocation = player.getLocation();
+                        if (playerLocation.distance(sheepLocation) <= 2) {
+                            playerLocation.getBlock().setType(Material.AIR);
+                        }
+                    }
+                }
+            }
+        };
+
+        task.runTaskTimer(plugin, 0, 1); // Exécuter toutes les 20 ticks (1 seconde)
     }
 }

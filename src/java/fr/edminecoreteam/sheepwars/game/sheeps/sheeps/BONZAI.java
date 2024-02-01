@@ -7,7 +7,6 @@ import fr.edminecoreteam.sheepwars.utils.minecraft.SkullNBT;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.WeatherType;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
@@ -18,23 +17,18 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class FOUDRE implements Listener
+public class BONZAI implements Listener
 {
     private final GameUtils gameUtils = new GameUtils();
     private ItemStack getSkull(String url) { return SkullNBT.getSkull(url); }
     private final static Core core = Core.getInstance();
-    private final String url = "http://textures.minecraft.net/texture/12a5354c230e861aac72734a4582d1317026454b807ac353fc3a0bd0d8c422ba";
+    private final String url = "http://textures.minecraft.net/texture/5753a8ec32be9c550d1c560acb941edd9e3b73ddbf1586923fb37b220b4553dd";
     private final ItemStack block = getSkull(url);
-    private final DyeColor sheepColor = DyeColor.YELLOW;
-    private final String name = "§6Mouton De Foudre";
+    private final DyeColor sheepColor = DyeColor.GREEN;
+    private final String name = "§2Mouton Bonzai";
 
     public void get(Player player)
     {
@@ -73,11 +67,13 @@ public class FOUDRE implements Listener
                     p.getInventory().remove(p.getItemInHand());
                     Vector pushDirection = p.getLocation().getDirection().multiply(4);
                     Sheep sheep = (Sheep) p.getWorld().spawnEntity(new Location(p.getWorld(), p.getLocation().getX(), p.getLocation().getY() + 1, p.getLocation().getZ()), EntityType.SHEEP);
-                    sheep.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 2 - 1));
                     sheep.setColor(sheepColor);
                     sheep.setCustomName(name);
                     sheep.setCustomNameVisible(false);
                     sheep.setVelocity(pushDirection);
+                    gameUtils.bonzai(sheep, core);
+                    gameUtils.bonzai(sheep, core);
+                    gameUtils.bonzai(sheep, core);
                     init(p, sheep);
                 }
             }
@@ -88,50 +84,17 @@ public class FOUDRE implements Listener
     {
         new BukkitRunnable() {
             int t = 0;
-            int f = 0;
-            final List<Player> playerList = new ArrayList<Player>();
             public void run() {
 
                 ++t;
-                ++f;
-
-                if (sheep == null || sheep.isDead())
+                if (sheep.isOnGround())
                 {
-                    for (Player pls : core.getServer().getOnlinePlayers())
-                    {
-                        pls.resetPlayerWeather();
-                        pls.resetPlayerTime();
-                    }
+                    sheep.remove();
                     cancel();
                 }
 
-                if (sheep != null && sheep.isOnGround())
+                if (sheep == null)
                 {
-                    gameUtils.summonLightningStorm(sheep.getLocation());
-                    Location loc = sheep.getLocation();
-                    for (Player pls : core.getServer().getOnlinePlayers())
-                    {
-                        double distanceSquared = pls.getLocation().distanceSquared(loc);
-                        if (distanceSquared <= 10 * 10)
-                        {
-                            if (sheep.isOnGround())
-                            {
-                                pls.setPlayerTime(18000, false);
-                                pls.setPlayerWeather(WeatherType.DOWNFALL);
-                                sheep.setVelocity(pls.getLocation().toVector().subtract(sheep.getLocation().toVector()).normalize().multiply(1));
-                                playerList.add(pls);
-                            }
-                        }
-                    }
-                }
-
-                if (f == 20)
-                {
-                    for (Player pls : core.getServer().getOnlinePlayers())
-                    {
-                        pls.resetPlayerWeather();
-                        pls.resetPlayerTime();
-                    }
                     sheep.remove();
                     cancel();
                 }
@@ -140,6 +103,6 @@ public class FOUDRE implements Listener
                     run();
                 }
             }
-        }.runTaskTimer((Plugin) core, 0L, 10L);
+        }.runTaskTimer((Plugin) core, 5L, 10L);
     }
 }
