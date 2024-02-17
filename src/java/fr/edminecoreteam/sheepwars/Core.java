@@ -1,11 +1,11 @@
 package fr.edminecoreteam.sheepwars;
 
-import fr.edminecoreteam.sheepwars.game.GameListeners;
-import fr.edminecoreteam.sheepwars.game.sheeps.SheepsListeners;
-import fr.edminecoreteam.sheepwars.game.sheeps.sheeps.*;
-import fr.edminecoreteam.sheepwars.game.teams.Teams;
-import fr.edminecoreteam.sheepwars.game.teams.displayname.ChatTeam;
-import fr.edminecoreteam.sheepwars.game.teams.displayname.TabListTeams;
+import fr.edminecoreteam.sheepwars.content.game.sheeps.sheeps.*;
+import fr.edminecoreteam.sheepwars.listeners.content.game.GameListeners;
+import fr.edminecoreteam.sheepwars.content.game.sheeps.SheepsListeners;
+import fr.edminecoreteam.sheepwars.content.game.teams.Teams;
+import fr.edminecoreteam.sheepwars.content.game.teams.displayname.ChatTeam;
+import fr.edminecoreteam.sheepwars.content.game.teams.displayname.TabListTeams;
 import fr.edminecoreteam.sheepwars.listeners.connection.JoinEvent;
 import fr.edminecoreteam.sheepwars.listeners.connection.LeaveEvent;
 import fr.edminecoreteam.sheepwars.utils.game.SpawnListeners;
@@ -16,8 +16,8 @@ import fr.edminecoreteam.sheepwars.utils.scoreboards.LeaveScoreboardEvent;
 import fr.edminecoreteam.sheepwars.utils.scoreboards.ScoreboardManager;
 import fr.edminecoreteam.sheepwars.utils.scoreboards.WorldChangeScoreboardEvent;
 import fr.edminecoreteam.sheepwars.utils.world.LoadWorld;
-import fr.edminecoreteam.sheepwars.waiting.WaitingListeners;
-import fr.edminecoreteam.sheepwars.waiting.guis.ChooseTeam;
+import fr.edminecoreteam.sheepwars.listeners.content.waiting.WaitingListeners;
+import fr.edminecoreteam.sheepwars.content.waiting.guis.ChooseTeam;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -80,7 +80,7 @@ public class Core extends JavaPlugin
         this.spawnListeners = new SpawnListeners();
         this.title = new TitleBuilder();
         this.bossBar = new BossBar(this, "SheepWars");
-        maxplayers = getConfig().getInt("teams.red.players") + getConfig().getInt("teams.blue.players");
+        this.maxplayers = getConfig().getInt("teams.red.players") + getConfig().getInt("teams.blue.players");
         Bukkit.getPluginManager().registerEvents((Listener) new JoinEvent(), (Plugin)this);
         Bukkit.getPluginManager().registerEvents((Listener) new LeaveEvent(), (Plugin)this);
 
