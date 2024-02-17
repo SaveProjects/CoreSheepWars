@@ -1,7 +1,6 @@
 package fr.edminecoreteam.sheepwars.content.game.sheeps;
 
 import fr.edminecoreteam.sheepwars.content.game.sheeps.sheeps.*;
-import fr.edminecoreteam.sheepwars.game.sheeps.sheeps.*;
 import org.bukkit.entity.Player;
 
 import java.util.Random;
