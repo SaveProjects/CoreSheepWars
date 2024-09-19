@@ -1,0 +1,11 @@
+com/macaron27/plugin/lobby/LobbyManager.class
+com/macaron27/plugin/teams/TeamManager.class
+com/macaron27/plugin/Main.class
+com/macaron27/plugin/game/Timer.class
+com/macaron27/plugin/Main$1.class
+com/macaron27/plugin/scoreboard/GameScoreboard.class
+com/macaron27/plugin/lobby/LobbyScoreboard.class
+com/macaron27/plugin/game/GameManager.class
+com/macaron27/plugin/game/GameManager$1.class
+com/macaron27/plugin/commands/SetGameSpawnCommand.class
+com/macaron27/plugin/teams/Team.class

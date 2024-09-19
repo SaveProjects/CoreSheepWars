@@ -1,0 +1,21 @@
+spawn:
+  world: world
+  x: 100.0
+  y: 65.0
+  z: 100.0
+  yaw: 0.0
+  pitch: 0.0
+
+scoreboard:
+  title: "§e§l  SHEEPWARS  §r"
+  players: "§fJoueurs: §a{players}§f/§a{maxplayer}"
+  start_status_waiting: "§cWAITING"
+  start_status_timer: "§a{timer}"
+  map: "§fMap: §a{mapname}"
+  mode: "§fMode: {mode}"
+  ip: "§e{ip}"
+  max_players: 12
+  start_threshold: 80  # Pourcentage minimum de joueurs pour commencer
+  mapname: "Arena1"
+  mode: "Normal"
+  ip: "play.edmire.com"

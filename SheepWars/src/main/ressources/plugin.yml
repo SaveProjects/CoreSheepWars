@@ -1,0 +1,14 @@
+name: SheepWars
+version: 1.0
+main: edmirecore.plugin.Main
+api-version: 1.8
+commands:
+  sheepwars:
+    usage: /<command>
+permissions:
+
+  sheepwars.setspawn:
+    default: op
+
+  sheepwars.setgamespawn:
+    default: op
